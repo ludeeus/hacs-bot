@@ -157,7 +157,7 @@ class Bot:
 
         failed = []
 
-        repo = repo[0]
+        repo = added[0]
         repochecks = CHECKS
         repository = None
         try:
