@@ -71,7 +71,7 @@ async def bot_handler(request):
         print(token)
         if event_data["repository"]["full_name"] != REPOSITORY:
             await repo_not_accepted(event_data, token["token"], session)
-            # return web.Response(status=200)
+            return web.Response(status=200)
         handler = Bot(session, token["token"], event_data)
         await handler.execute()
     return web.Response(status=200)
