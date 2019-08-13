@@ -33,7 +33,6 @@ class Bot:
         self.status = None
 
     async def execute(self):
-        print("Initializing HACS")
         self.aiogithub = AIOGitHub(self.token, self.session)
         self.repository = await self.aiogithub.get_repo(
             self.event_data["repository"]["full_name"]
