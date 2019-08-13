@@ -4,6 +4,7 @@ from aiogithubapi import AIOGitHub
 
 from const import (
     CLOSED_ISSUE,
+    CHECKS,
     GREETING_PR,
     LABEL_BACKEND,
     LABEL_DOCUMENTATION,
@@ -63,7 +64,6 @@ class Bot:
         await self.issue_update.update()
 
     async def handle_pr(self):
-        await self.status.create("error", "Test 1")
         if self.action == "opened":
             self.issue_comment.message = GREETING_PR.format(self.submitter)
             await self.issue_comment.create()
@@ -157,17 +157,13 @@ class Bot:
         issue_comment += "These checks are automatic.\n\n"
 
         for repo in added:
-            repochecks = {
-                "repository exists": False,
-                "submitter is owner": False,
-                "not a fork": False,
-            }
+            repochecks = CHECKS
             try:
                 repository = await self.aiogithub.get_repo(repo)
-                repochecks["repository exists"] = True
+                repochecks["exists"]["state"] = True
                 print(repository.fork)
-                repochecks["not a fork"] = not repository.fork
-                repochecks["submitter is owner"] = repo.split("/")[0] == self.submitter
+                repochecks["fork"]["state"] = not repository.fork
+                repochecks["owner"]["state"] = repo.split("/")[0] == self.submitter
             except Exception:
                 pass
 
@@ -175,15 +171,15 @@ class Bot:
             issue_comment += f"[Repository link](https://github.com/{repo})\n\n"
             issue_comment += "Status | Check\n-- | --\n"
             for check in repochecks:
-                issue_comment += "✔️" if repochecks[check] else "❌"
+                issue_comment += "✔️" if repochecks[check]["state"] else "❌"
                 issue_comment += f" | {check.capitalize()}\n"
             issue_comment += "\n"
 
             for check in repochecks:
-                if repochecks[check]:
-                    await self.status.create("success", check.title())
+                if repochecks[check]["state"]:
+                    await self.status.create("success", check["description"])
                 else:
-                    await self.status.create("error", check.title())
+                    await self.status.create("error", check["description"], check["url"])
 
         comments = await self.repository.list_issue_comments(self.issue_number)
         comment_number = None

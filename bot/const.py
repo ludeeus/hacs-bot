@@ -4,6 +4,24 @@ APP_ID = 38284
 REPOSITORY = "custom-components/hacs"
 NAME = "hacs-bot"
 
+CHECKS = {
+    "fork": {
+        "state": False,
+        "description": "Repository is not a fork.",
+        "url": None
+    },
+    "owner": {
+        "state": False,
+        "description": "Submitter is the owner of the repository.",
+        "url": "https://custom-components.github.io/hacs/developer/include_default_repositories/#include-default-repositories"
+    },
+    "exist": {
+        "state": False,
+        "description": "The repository exist.",
+        "url": None
+    }
+}
+
 GREETING_PR = """Hi, @{} 👋
 Automatic tasks are now running some initial checks before this can be merged.
 When those are done, someone will manually ensure that that it's OK. 💃
