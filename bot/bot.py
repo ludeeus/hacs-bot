@@ -177,6 +177,7 @@ class Bot:
         if repository is not None:
             repochecks = await self.check_common(repository, repochecks)
 
+        can_fail = ["description", "info", "readme"]
 
         for check in repochecks:
             if repochecks[check]["state"]:
@@ -186,12 +187,21 @@ class Bot:
                     target_url=repochecks[check]["url"],
                 )
             else:
-                failed.append([repository, check])
-                await self.status.create(
-                    "error",
-                    repochecks[check]["description"],
-                    target_url=repochecks[check]["url"],
-                )
+                if check in can_fail:
+                    failed.append([repository, check])
+                    await self.status.create(
+                        "error",
+                        repochecks[check]["description"],
+                        "This is not blocking",
+                        target_url=repochecks[check]["url"],
+                    )
+                else:
+                    failed.append([repository, check])
+                    await self.status.create(
+                        "error",
+                        repochecks[check]["description"],
+                        target_url=repochecks[check]["url"],
+                    )
 
         if not failed:
             print("All is good, approving the PR.")
