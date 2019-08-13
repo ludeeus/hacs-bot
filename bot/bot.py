@@ -56,8 +56,8 @@ class Bot:
         self.issue_update = IssueUpdate(self.issue_number, self.repository)
 
         if self.issue_type == "pr":
-            await self.handle_pr()
             self.status = Status(self.event_data, self.session, self.token)
+            await self.handle_pr()
         elif self.issue_type == "issue":
             await self.handle_issue()
 
