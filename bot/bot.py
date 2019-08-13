@@ -137,11 +137,11 @@ class Bot:
 
     async def pr_data_new_default_repository(self):
         """Handle PR's to the data branch."""
-        if self.action not in ["opened", "synchronize"]:
-            if self.action == "labeled":
-                if self.event_data["label"]["name"] != "recheck":
-                    return
+        if self.action not in ["opened", "synchronize", "labeled"]:
             return
+        if self.action == "labeled":
+            if self.event_data["label"]["name"] != "recheck":
+                return
         self.issue_update.labels.append(LABEL_NEW_REPO)
 
         files, added, removed = await self.get_pr_diff_data()
