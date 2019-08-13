@@ -92,11 +92,12 @@ class Bot:
 
         if self.action == "created":
             if self.event_data.get("comment") is not None and self.event_data["issue"].get("pull_request") is None:
-                print("Someone commented on a closed issue!")
-                self.issue_update.state = "closed"
-                self.issue_comment.message = CLOSED_ISSUE.format(self.submitter)
-                await self.issue_comment.create()
-                return
+                if self.event_data["state"] == "closed":
+                    print("Someone commented on a closed issue!")
+                    self.issue_update.state = "closed"
+                    self.issue_comment.message = CLOSED_ISSUE.format(self.submitter)
+                    await self.issue_comment.create()
+                    return
 
     def issue_is_known(self):
         from known_issues import KNOWN_ISSUES
@@ -108,7 +109,7 @@ class Bot:
                     continue
                 if check not in self.event_data["issue"]["body"]:
                     all_checks_is_present = False
-            if not all_checks_is_present:
+            if all_checks_is_present:
                 return True, known_issue["description"]
         return False, None
 
