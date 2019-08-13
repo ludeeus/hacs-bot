@@ -156,11 +156,14 @@ class Bot:
 
         for repo in added:
             repochecks = CHECKS
-            repository = await self.aiogithub.get_repo(repo)
-            repochecks["exists"]["state"] = True
-            repochecks["exists"]["url"] = f"https://github.com/{repo}"
-            repochecks["fork"]["state"] = not repository.fork
-            repochecks["owner"]["state"] = repo.split("/")[0] == self.submitter
+            try:
+                repository = await self.aiogithub.get_repo(repo)
+                repochecks["exist"]["state"] = True
+                repochecks["exist"]["url"] = f"https://github.com/{repo}"
+                repochecks["fork"]["state"] = not repository.fork
+                repochecks["owner"]["state"] = repo.split("/")[0] == self.submitter
+            except Exception:
+                pass
 
             for check in repochecks:
                 if repochecks[check]["state"]:
