@@ -184,12 +184,12 @@ class Bot:
                     )
 
             if not failed:
-                endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pull/{self.issue_number}/reviews"
+                endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"
                 data = {
                     "commit_id": self.event_data["pull_request"]["head"]["sha"],
                     "event": "APPROVE"
                   }
-                test = await self.session.post(
+                await self.session.post(
                     endpoint,
                     json=data,
                     headers={
@@ -197,7 +197,4 @@ class Bot:
                         "Authorization": f"token {self.token}",
                     },
                 )
-
-                test = await test.json()
-                print(test)
 
