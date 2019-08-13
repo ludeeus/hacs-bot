@@ -179,7 +179,7 @@ class Bot:
                 if repochecks[check]["state"]:
                     await self.status.create("success", repochecks[check]["description"])
                 else:
-                    await self.status.create("error", repochecks[check]["description"], repochecks[check]["url"])
+                    await self.status.create("error", repochecks[check]["description"], target_url=repochecks[check]["url"])
 
         comments = await self.repository.list_issue_comments(self.issue_number)
         comment_number = None
