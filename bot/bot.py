@@ -154,6 +154,8 @@ class Bot:
             self.issue_comment.message = MULTIPLE_FILES_CHANGED
             await self.issue_comment.create()
 
+        print(added)
+
         for repo in added:
             repochecks = CHECKS
             try:
