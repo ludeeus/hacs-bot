@@ -53,10 +53,8 @@ def get_jwtoken():
 async def bot_handler(request):
     """Handle POST request."""
     event_data = await request.json()
-    print(event_data["sender"]["type"])
     if event_data.get("sender") is not None:
         if event_data["sender"]["type"] == "Bot":
-            print("Skipping")
             return web.Response(status=200)
     jwtoken = get_jwtoken()
     async with ClientSession() as session:
