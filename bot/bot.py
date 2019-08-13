@@ -154,6 +154,8 @@ class Bot:
             self.issue_comment.message = MULTIPLE_FILES_CHANGED
             await self.issue_comment.create()
 
+        failed = []
+
         for repo in added:
             repochecks = CHECKS
             try:
@@ -165,6 +167,7 @@ class Bot:
             except Exception:
                 pass
 
+
             for check in repochecks:
                 if repochecks[check]["state"]:
                     await self.status.create(
@@ -173,9 +176,25 @@ class Bot:
                         target_url=repochecks[check]["url"],
                     )
                 else:
+                    failed.append([repository, check])
                     await self.status.create(
                         "error",
                         repochecks[check]["description"],
                         target_url=repochecks[check]["url"],
                     )
+
+            if not failed:
+                endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pull/{self.issue_number}/reviews"
+                data = {
+                    "commit_id": self.event_data["pull_request"]["head"]["sha"],
+                    "event": "APPROVE"
+                  }
+                await self.session.post(
+                    endpoint,
+                    json=data,
+                    headers={
+                        "Accept": "application/vnd.github.v3.raw+json",
+                        "Authorization": f"token {self.token}",
+                    },
+                )
 
