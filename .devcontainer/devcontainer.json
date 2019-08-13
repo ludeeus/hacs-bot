@@ -1,0 +1,26 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+	"name": "hacs-bot",
+	"context": "..",
+	"dockerFile": "Dockerfile",
+	"postCreateCommand": "pip3 install -r requirements.txt",
+	"appPort": 8080,
+	"runArgs": [
+		"-e",
+		"GIT_EDITOR='code --wait'"
+	],
+	"extensions": [
+		"ms-python.python"
+	],
+	"settings": {
+		"editor.tabSize": 4,
+		"python.pythonPath": "/usr/local/bin/python",
+		"python.linting.pylintEnabled": true,
+		"python.linting.enabled": true,
+		"python.formatting.provider": "black",
+		"editor.formatOnPaste": false,
+		"editor.formatOnSave": true,
+		"editor.formatOnType": true,
+		"files.trimTrailingWhitespace": true
+	}
+}
