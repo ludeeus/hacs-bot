@@ -152,44 +152,30 @@ class Bot:
         if len(files) > 1:
             self.issue_update.labels.append("Manual review required")
             self.issue_comment.message = MULTIPLE_FILES_CHANGED
-
-        issue_comment = "# Repository checks\n\n"
-        issue_comment += "These checks are automatic.\n\n"
+            await self.issue_comment.create()
 
         for repo in added:
             repochecks = CHECKS
             try:
                 repository = await self.aiogithub.get_repo(repo)
                 repochecks["exists"]["state"] = True
-                print(repository.fork)
+                repochecks["exists"]["url"] = f"https://github.com/{repo}"
                 repochecks["fork"]["state"] = not repository.fork
                 repochecks["owner"]["state"] = repo.split("/")[0] == self.submitter
             except Exception:
                 pass
 
-            issue_comment += f"## Checks for `{repo}`\n\n"
-            issue_comment += f"[Repository link](https://github.com/{repo})\n\n"
-            issue_comment += "Status | Check\n-- | --\n"
-            for check in repochecks:
-                issue_comment += "✔️" if repochecks[check]["state"] else "❌"
-                issue_comment += f" | {check.capitalize()}\n"
-            issue_comment += "\n"
-
             for check in repochecks:
                 if repochecks[check]["state"]:
-                    await self.status.create("success", repochecks[check]["description"])
+                    await self.status.create(
+                        "success",
+                        repochecks[check]["description"],
+                        target_url=repochecks[check]["url"],
+                    )
                 else:
-                    await self.status.create("error", repochecks[check]["description"], target_url=repochecks[check]["url"])
+                    await self.status.create(
+                        "error",
+                        repochecks[check]["description"],
+                        target_url=repochecks[check]["url"],
+                    )
 
-        comments = await self.repository.list_issue_comments(self.issue_number)
-        comment_number = None
-        for comment in comments:
-            if "# Repository checks\n\n" in comment.body:
-                comment_number = comment.id
-                break
-
-        self.issue_comment.message = issue_comment
-        if comment_number is None:
-            await self.issue_comment.create()
-        else:
-            await self.issue_comment.update(comment_number)
