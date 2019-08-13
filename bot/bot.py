@@ -154,18 +154,13 @@ class Bot:
             self.issue_comment.message = MULTIPLE_FILES_CHANGED
             await self.issue_comment.create()
 
-        print(added)
-
         for repo in added:
             repochecks = CHECKS
-            try:
-                repository = await self.aiogithub.get_repo(repo)
-                repochecks["exists"]["state"] = True
-                repochecks["exists"]["url"] = f"https://github.com/{repo}"
-                repochecks["fork"]["state"] = not repository.fork
-                repochecks["owner"]["state"] = repo.split("/")[0] == self.submitter
-            except Exception:
-                pass
+            repository = await self.aiogithub.get_repo(repo)
+            repochecks["exists"]["state"] = True
+            repochecks["exists"]["url"] = f"https://github.com/{repo}"
+            repochecks["fork"]["state"] = not repository.fork
+            repochecks["owner"]["state"] = repo.split("/")[0] == self.submitter
 
             for check in repochecks:
                 if repochecks[check]["state"]:
