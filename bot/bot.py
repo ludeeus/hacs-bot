@@ -54,10 +54,10 @@ class Bot:
 
         self.issue_comment = IssueComment(self.issue_number, self.repository)
         self.issue_update = IssueUpdate(self.issue_number, self.repository)
-        self.status = Status(self.event_data, self.session, self.token)
 
         if self.issue_type == "pr":
             await self.handle_pr()
+            self.status = Status(self.event_data, self.session, self.token)
         elif self.issue_type == "issue":
             await self.handle_issue()
 
