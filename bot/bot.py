@@ -93,7 +93,7 @@ class Bot:
 
         if self.action == "created":
             if self.event_data.get("comment") is not None and self.event_data["issue"].get("pull_request") is None:
-                if self.event_data["state"] == "closed":
+                if self.event_data["issue"]["state"] == "closed":
                     print("Someone commented on a closed issue!")
                     self.issue_update.state = "closed"
                     self.issue_comment.message = CLOSED_ISSUE.format(self.submitter)
