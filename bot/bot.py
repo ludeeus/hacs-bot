@@ -190,7 +190,7 @@ class Bot:
                     "commit_id": self.event_data["pull_request"]["head"]["sha"],
                     "event": "APPROVE"
                   }
-                test = await self.session.post(
+                await self.session.post(
                     endpoint,
                     json=data,
                     headers={
@@ -198,7 +198,4 @@ class Bot:
                         "Authorization": f"token {self.token}",
                     },
                 )
-
-                test = await test.json()
-                print(test)
 
