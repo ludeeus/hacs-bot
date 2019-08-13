@@ -149,53 +149,90 @@ class Bot:
             if not "/" in repo:
                 added.remove(repo)
 
-        if len(files) > 1:
+        if len(files) > 1 or len(added) > 1:
             self.issue_update.labels.append("Manual review required")
             self.issue_comment.message = MULTIPLE_FILES_CHANGED
             await self.issue_comment.create()
+            return
 
         failed = []
 
-        for repo in added:
-            repochecks = CHECKS
-            try:
-                repository = await self.aiogithub.get_repo(repo)
-                repochecks["exist"]["state"] = True
-                repochecks["exist"]["url"] = f"https://github.com/{repo}"
-                repochecks["fork"]["state"] = not repository.fork
-                repochecks["owner"]["state"] = repo.split("/")[0] == self.submitter
-            except Exception:
-                pass
+        repo = repo[0]
+        repochecks = CHECKS
+        repository = None
+        try:
+            repository = await self.aiogithub.get_repo(repo)
+            repochecks["exist"]["state"] = True
+            repochecks["exist"]["url"] = f"https://github.com/{repo}"
+            repochecks["fork"]["state"] = not repository.fork
+            repochecks["owner"]["state"] = repo.split("/")[0] == self.submitter
+        except Exception:
+            pass
+
+        if repository is not None:
+            repochecks = await self.check_common(repository, repochecks)
 
 
-            for check in repochecks:
-                if repochecks[check]["state"]:
-                    await self.status.create(
-                        "success",
-                        repochecks[check]["description"],
-                        target_url=repochecks[check]["url"],
-                    )
-                else:
-                    failed.append([repository, check])
-                    await self.status.create(
-                        "error",
-                        repochecks[check]["description"],
-                        target_url=repochecks[check]["url"],
-                    )
-
-            if not failed:
-                print("All is good, approving the PR.")
-                endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"
-                data = {
-                    "commit_id": self.event_data["pull_request"]["head"]["sha"],
-                    "event": "APPROVE"
-                  }
-                await self.session.post(
-                    endpoint,
-                    json=data,
-                    headers={
-                        "Accept": "application/vnd.github.v3.raw+json",
-                        "Authorization": f"token {self.token}",
-                    },
+        for check in repochecks:
+            if repochecks[check]["state"]:
+                await self.status.create(
+                    "success",
+                    repochecks[check]["description"],
+                    target_url=repochecks[check]["url"],
+                )
+            else:
+                failed.append([repository, check])
+                await self.status.create(
+                    "error",
+                    repochecks[check]["description"],
+                    target_url=repochecks[check]["url"],
                 )
 
+        if not failed:
+            print("All is good, approving the PR.")
+            endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"
+            data = {
+                "commit_id": self.event_data["pull_request"]["head"]["sha"],
+                "event": "APPROVE"
+                }
+            await self.session.post(
+                endpoint,
+                json=data,
+                headers={
+                    "Accept": "application/vnd.github.v3.raw+json",
+                    "Authorization": f"token {self.token}",
+                },
+            )
+
+
+    async def check_common(self, repository, repochecks):
+        rootcontent = await repository.get_contents("")
+        readme_files = ["readme", "readme.md"]
+        info_files = ["info", "info.md"]
+
+        repochecks["desc"] = {
+            "state": repository.description != "",
+            "description": "Repository have description",
+            "url": None
+        }
+
+        repochecks["readme"] = {
+            "state": False,
+            "description": "Repository have a readme file",
+            "url": None
+        }
+
+        repochecks["info"] = {
+            "state": False,
+            "description": "Repository have a info file",
+            "url": "https://custom-components.github.io/hacs/developer/general/#enhance-the-experience"
+        }
+
+        for filename in rootcontent:
+            if filename.name.lower() in readme_files:
+                repochecks["readme"]["state"] = True
+            if filename.name.lower() in info_files:
+                repochecks["info"]["state"] = True
+
+
+        return repochecks
