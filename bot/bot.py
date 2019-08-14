@@ -92,13 +92,20 @@ class Bot:
                 return
 
         if self.action == "created":
-            if self.event_data.get("comment") is not None and self.event_data["issue"].get("pull_request") is None:
+            if (
+                self.event_data.get("comment") is not None
+                and self.event_data["issue"].get("pull_request") is None
+            ):
                 if self.event_data["issue"]["state"] == "closed":
-                    print("Someone commented on a closed issue!")
-                    self.issue_update.state = "closed"
-                    self.issue_comment.message = CLOSED_ISSUE.format(self.submitter)
-                    await self.issue_comment.create()
-                    return
+                    if (
+                        self.event_data["issue"]["closed_at"]
+                        != self.event_data["comment"]["created_at"]
+                    ):
+                        print("Someone commented on a closed issue!")
+                        self.issue_update.state = "closed"
+                        self.issue_comment.message = CLOSED_ISSUE.format(self.submitter)
+                        await self.issue_comment.create()
+                        return
 
     def issue_is_known(self):
         from known_issues import KNOWN_ISSUES
@@ -208,8 +215,8 @@ class Bot:
             endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"
             data = {
                 "commit_id": self.event_data["pull_request"]["head"]["sha"],
-                "event": "APPROVE"
-                }
+                "event": "APPROVE",
+            }
             await self.session.post(
                 endpoint,
                 json=data,
@@ -219,7 +226,6 @@ class Bot:
                 },
             )
 
-
     async def check_common(self, repository, repochecks):
         rootcontent = await repository.get_contents("")
         readme_files = ["readme", "readme.md"]
@@ -228,19 +234,19 @@ class Bot:
         repochecks["desc"] = {
             "state": repository.description != "",
             "description": "Repository have description",
-            "url": None
+            "url": None,
         }
 
         repochecks["readme"] = {
             "state": False,
             "description": "Repository have a readme file",
-            "url": None
+            "url": None,
         }
 
         repochecks["info"] = {
             "state": False,
             "description": "Repository have a info file",
-            "url": "https://custom-components.github.io/hacs/developer/general/#enhance-the-experience"
+            "url": "https://custom-components.github.io/hacs/developer/general/#enhance-the-experience",
         }
 
         for filename in rootcontent:
@@ -248,6 +254,5 @@ class Bot:
                 repochecks["readme"]["state"] = True
             if filename.name.lower() in info_files:
                 repochecks["info"]["state"] = True
-
 
         return repochecks
