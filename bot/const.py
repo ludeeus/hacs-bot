@@ -4,6 +4,8 @@ APP_ID = 38284
 REPOSITORY = "custom-components/hacs"
 NAME = "hacs-bot"
 
+CORE_CHECKS = ["fork", "owner", "exsist", "readme", "manifest", "info"]
+
 CHECKS = {
     "fork": {
         "state": False,

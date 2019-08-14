@@ -14,6 +14,7 @@ class Bot:
     def __init__(self, session, token, event_data):
         """initialize."""
         self.branch = None
+        self.category = None
         self.session = session
         self.const = const
         self.repository = None
