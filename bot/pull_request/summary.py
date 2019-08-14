@@ -4,7 +4,7 @@ def summary(self, repo, repochecks):
     # Get the current comments
     current = []
 
-    message = f"## Checks for `{repo}`\n\n[Repository link](https://github.com/{repo})\n\nStatus | Check\n-- | --\n"
+    message = f"## Checks for `{repo}`\n\n"
     if message in current:
         # If comment exist update.
         pass 
@@ -12,6 +12,7 @@ def summary(self, repo, repochecks):
         # If not create.
         pass
 
+    message += "[Repository link](https://github.com/{repo})\n\n"
 
     message += "### Core checks\n\nStatus | Check\n-- | --\n"
 
