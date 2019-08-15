@@ -14,11 +14,11 @@ async def new_repo_common(repository, repochecks, files):
         "url": None,
     }
 
-    repochecks["manifest"] = {
-        "state": False,
-        "description": "Repository have a hacs.json file",
-        "url": None,  # This needs documentation
-    }
+#    repochecks["manifest"] = {
+#        "state": False,
+#        "description": "Repository have a hacs.json file",
+#        "url": None,  # This needs documentation
+#    }
 
     repochecks["readme"] = {
         "state": False,
