@@ -12,12 +12,12 @@ class IssueComment:
 
     async def update(self, comment_number):
         self.message += FOOTER
-        print(f"Updating comment to issue {self.issue_number}")
+        print(f"Updating comment to #{self.issue_number}")
         await self.repository.update_comment_on_issue(comment_number, self.message)
 
     async def create(self):
         self.message += FOOTER
-        print(f"Adding comment to issue {self.issue_number}")
+        print(f"Adding comment to #{self.issue_number}")
         await self.repository.comment_on_issue(self.issue_number, self.message)
 
 
@@ -30,7 +30,7 @@ class IssueUpdate:
         self.state = None
 
     async def update(self):
-        print(f"updating {self.repository.full_name} and #{self.issue_number}")
+        print(f"updating #{self.issue_number}")
         if self.labels:
             await self.repository.update_issue(self.issue_number, labels=self.labels)
 

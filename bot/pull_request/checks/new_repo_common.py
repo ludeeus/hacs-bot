@@ -1,5 +1,6 @@
 """Checks for new repos."""
 
+
 async def new_repo_common(repository, repochecks, files):
     if files[0] == "blacklist":
         return repochecks
@@ -7,8 +8,7 @@ async def new_repo_common(repository, repochecks, files):
     readme_files = ["readme", "readme.md"]
     info_files = ["info", "info.md"]
 
-
-    repochecks["desc"] = {
+    repochecks["description"] = {
         "state": repository.description != "",
         "description": "Repository have description",
         "url": None,
@@ -17,7 +17,7 @@ async def new_repo_common(repository, repochecks, files):
     repochecks["manifest"] = {
         "state": False,
         "description": "Repository have a hacs.json file",
-        "url": None, # This needs documentation
+        "url": None,  # This needs documentation
     }
 
     repochecks["readme"] = {
@@ -35,14 +35,13 @@ async def new_repo_common(repository, repochecks, files):
     for filename in rootcontent:
         if filename.name == "hacs.json":
             repochecks["manifest"]["state"] = True
-            repochecks["manifest"]["url"] = filename.attributes.html_url
+            repochecks["manifest"]["url"] = filename.attributes["html_url"]
         if filename.name.lower() in readme_files:
             repochecks["readme"]["state"] = True
-            repochecks["readme"]["url"] = filename.attributes.html_url
+            repochecks["readme"]["url"] = filename.attributes["html_url"]
         if filename.name.lower() in info_files:
             repochecks["info"]["state"] = True
-            repochecks["info"]["url"] = filename.attributes.html_url
-
+            repochecks["info"]["url"] = filename.attributes["html_url"]
 
     category = files[0]
     if category == "appdaemon":
@@ -59,6 +58,5 @@ async def new_repo_common(repository, repochecks, files):
 
     elif category == "theme":
         print(f"Running tests for theme")
-
 
     return repochecks

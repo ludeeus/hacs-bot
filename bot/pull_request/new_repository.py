@@ -1,5 +1,8 @@
 """Handle new repositories."""
-from checks.new_repo_common import new_repo_common
+# pylint: disable=no-name-in-module, broad-except, missing-docstring
+from pull_request.checks.new_repo_common import new_repo_common
+from pull_request.checks.summary import summary
+
 
 async def new_repository(self, files, added, removed):
     """Handle PR's to the data branch."""
@@ -28,6 +31,7 @@ async def new_repository(self, files, added, removed):
     failed = []
 
     repo = added[0]
+    self.category = files[0].split("/")[-1]
     repochecks = self.const.CHECKS
     repository = None
     try:
@@ -67,6 +71,8 @@ async def new_repository(self, files, added, removed):
                     repochecks[check]["description"],
                     target_url=repochecks[check]["url"],
                 )
+
+    await summary(self, repo, repochecks)
 
     if not failed:
         print("All is good, approving the PR.")

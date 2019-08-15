@@ -1,6 +1,8 @@
 """Handle pull requests."""
-from new_repository import new_repository
-from diff import get_pr_diff_data
+# pylint: disable=no-name-in-module, missing-docstring
+from pull_request.new_repository import new_repository
+from pull_request.diff import get_pr_diff_data
+
 
 async def handle_pull_request(self):
     self.branch = self.event_data["pull_request"]["base"]["ref"]
@@ -8,7 +10,9 @@ async def handle_pull_request(self):
         self.issue_comment.message = self.const.GREETING_PR.format(self.submitter)
         await self.issue_comment.create()
 
-    files, added, removed = await get_pr_diff_data(self.session, self.event_data, self.issue_number)
+    files, added, removed = await get_pr_diff_data(
+        self.session, self.event_data, self.issue_number
+    )
 
     for changed_file in files:
         if "/docs/" in changed_file:
@@ -18,5 +22,5 @@ async def handle_pull_request(self):
         if changed_file.endswith(".py"):
             self.issue_update.labels.append(self.const.LABEL_BACKEND)
 
-    if self.branch  == "data":
+    if self.branch == "data":
         await new_repository(self, files, added, removed)

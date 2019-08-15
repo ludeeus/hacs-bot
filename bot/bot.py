@@ -1,5 +1,5 @@
 """Handle Bot automations."""
-# pylint: disable=missing-docstring,line-too-long,broad-except
+# pylint: disable=missing-docstring,line-too-long,broad-except,no-name-in-module
 from aiogithubapi import AIOGitHub
 
 import const as const
