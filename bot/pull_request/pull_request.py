@@ -16,11 +16,14 @@ async def handle_pull_request(self):
 
     for changed_file in files:
         if "/docs/" in changed_file:
-            self.issue_update.labels.append(self.const.LABEL_DOCUMENTATION)
+            if self.const.LABEL_DOCUMENTATION not in self.issue_update.labels:
+                self.issue_update.labels.append(self.const.LABEL_DOCUMENTATION)
         if changed_file.startswith("/custom_components/hacs/frontend/"):
-            self.issue_update.labels.append(self.const.LABEL_FRONTEND)
+            if self.const.LABEL_FRONTEND not in self.issue_update.labels:
+                self.issue_update.labels.append(self.const.LABEL_FRONTEND)
         if changed_file.endswith(".py"):
-            self.issue_update.labels.append(self.const.LABEL_BACKEND)
+            if self.const.LABEL_BACKEND not in self.issue_update.labels:
+                self.issue_update.labels.append(self.const.LABEL_BACKEND)
 
     if self.branch == "data":
         await new_repository(self, files, added, removed)
