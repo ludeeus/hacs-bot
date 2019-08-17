@@ -46,8 +46,6 @@ async def new_repository(self, files, added, removed):
     if repository is not None:
         repochecks = await new_repo_common(repository, repochecks, files)
 
-    can_fail = ["description", "info", "readme", "manifest"]
-
     for check in repochecks:
         if repochecks[check]["state"]:
             await self.status.create(
@@ -56,21 +54,12 @@ async def new_repository(self, files, added, removed):
                 target_url=repochecks[check]["url"],
             )
         else:
-            if check in can_fail:
-                failed.append([repository, check])
-                await self.status.create(
-                    "error",
-                    repochecks[check]["description"],
-                    "This is not a blocking error yet",
-                    target_url=repochecks[check]["url"],
-                )
-            else:
-                failed.append([repository, check])
-                await self.status.create(
-                    "error",
-                    repochecks[check]["description"],
-                    target_url=repochecks[check]["url"],
-                )
+            failed.append([repository, check])
+            await self.status.create(
+                "error",
+                repochecks[check]["description"],
+                target_url=repochecks[check]["url"],
+            )
 
     await summary(self, repo, repochecks)
 

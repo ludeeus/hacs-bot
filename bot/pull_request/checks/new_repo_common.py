@@ -1,5 +1,5 @@
 """Checks for new repos."""
-
+import json
 
 async def new_repo_common(repository, repochecks, files):
     if files[0] == "blacklist":
@@ -11,37 +11,45 @@ async def new_repo_common(repository, repochecks, files):
     repochecks["description"] = {
         "state": repository.description != "",
         "description": "Repository have description",
-        "url": None,
+        "url": "https://manifest--hacs.netlify.com/developer/general/#description",
     }
 
-#    repochecks["manifest"] = {
-#        "state": False,
-#        "description": "Repository have a hacs.json file",
-#        "url": None,  # This needs documentation
-#    }
+    repochecks["manifest"] = {
+        "state": False,
+        "description": "Repository have a hacs.json file",
+        "url": "https://manifest--hacs.netlify.com/developer/general/#hacsjson"
+    }
 
     repochecks["readme"] = {
         "state": False,
         "description": "Repository have a readme file",
-        "url": None,
+        "url": "https://manifest--hacs.netlify.com/developer/general/#readme",
     }
 
     repochecks["info"] = {
         "state": False,
         "description": "Repository have a info file",
-        "url": "https://custom-components.github.io/hacs/developer/general/#enhance-the-experience",
+        "url": "https://manifest--hacs.netlify.com/developer/general/#infomd",
     }
 
+    manifestcontent = None
     for filename in rootcontent:
         if filename.name == "hacs.json":
             repochecks["manifest"]["state"] = True
             repochecks["manifest"]["url"] = filename.attributes["html_url"]
+
+            manifestcontent = await repository.get_contents("hacs.json")
+            manifestcontent = json.loads(manifestcontent.content)
         if filename.name.lower() in readme_files:
             repochecks["readme"]["state"] = True
             repochecks["readme"]["url"] = filename.attributes["html_url"]
         if filename.name.lower() in info_files:
             repochecks["info"]["state"] = True
             repochecks["info"]["url"] = filename.attributes["html_url"]
+
+    if manifestcontent is not None:
+        if manifestcontent.get("render_readme"):
+            del repochecks["info"]
 
     category = files[0]
     if category == "appdaemon":
