@@ -5,7 +5,7 @@ import json
 async def new_repo_common(repository, repochecks, files):
     if files[0] == "blacklist":
         return repochecks
-    rootcontent = await repository.get_contents("")
+    rootcontent = await repository.get_contents("", repository.attributes['ref'])
     readme_files = ["readme", "readme.md"]
     info_files = ["info", "info.md"]
 
@@ -39,7 +39,7 @@ async def new_repo_common(repository, repochecks, files):
             repochecks["manifest"]["state"] = True
             repochecks["manifest"]["url"] = filename.attributes["html_url"]
 
-            manifestcontent = await repository.get_contents("hacs.json")
+            manifestcontent = await repository.get_contents("hacs.json", repository.attributes['ref'])
             manifestcontent = json.loads(manifestcontent.content)
         if filename.name.lower() in readme_files:
             repochecks["readme"]["state"] = True

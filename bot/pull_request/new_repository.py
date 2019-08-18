@@ -45,6 +45,11 @@ async def new_repository(self, files, added, removed):
         pass
 
     if repository is not None:
+        releases = await repository.get_releases()
+        if releases:
+            repository.attributes["ref"] = f"tags/{releases[0].tag_name}"
+        else:
+            repository.attributes["ref"] = repository.default_branch
         repochecks = await new_repo_common(repository, repochecks, files)
 
     for check in repochecks:
@@ -62,7 +67,7 @@ async def new_repository(self, files, added, removed):
                 target_url=repochecks[check]["url"],
             )
 
-    await summary(self, repo, repochecks)
+    await summary(self, repository, repochecks)
 
     if not failed:
         print("All is good, approving the PR.")

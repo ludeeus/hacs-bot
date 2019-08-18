@@ -24,10 +24,10 @@ async def check_import_type(repository, repochecks):
     import_type = None
     readme_files = ["readme", "readme.md"]
     try:
-        root = await repository.get_contents("")
+        root = await repository.get_contents("", repository.attributes['ref'])
         for file in root:
             if file.name.lower() in readme_files:
-                readme = await repository.get_contents(file.name)
+                readme = await repository.get_contents(file.name, repository.attributes['ref'])
                 break
     except Exception:
         return repochecks
@@ -64,7 +64,7 @@ async def verify_plugin_location(repository, repochecks):
             files = []
             if location != "release":
                 try:
-                    objects = await repository.get_contents(location)
+                    objects = await repository.get_contents(location, repository.attributes['ref'])
                 except Exception:
                     continue
             else:

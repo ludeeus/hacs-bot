@@ -18,7 +18,7 @@ async def python_script_exsist(repository, repochecks):
         "url": "https://hacs.netlify.com/developer/python_script/#repository-structure",
     }
     try:
-        psdir = await repository.get_contents("python_script")
+        psdir = await repository.get_contents("python_script", repository.attributes['ref'])
         if not isinstance(psdir, list):
             return repochecks
 

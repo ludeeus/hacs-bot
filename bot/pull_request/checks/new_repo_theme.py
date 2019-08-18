@@ -18,7 +18,7 @@ async def theme_exsist(repository, repochecks):
         "url": "https://hacs.netlify.com/developer/theme/#repository-structure",
     }
     try:
-        themedir = await repository.get_contents("themes")
+        themedir = await repository.get_contents("themes", repository.attributes['ref'])
         if not isinstance(themedir, list):
             return repochecks
 

@@ -18,11 +18,11 @@ async def app_directory_exsist(repository, repochecks):
         "url": "https://hacs.netlify.com/developer/appdaemon/#repository-structure",
     }
     try:
-        appdir = await repository.get_contents("apps")
+        appdir = await repository.get_contents("apps", repository.attributes['ref'])
         if not isinstance(appdir, list):
             return repochecks
 
-        appdir = await repository.get_contents(appdir[0].path)
+        appdir = await repository.get_contents(appdir[0].path, repository.attributes['ref'])
         for filename in appdir:
             if filename.name.endswith(".py"):
                 repochecks["app exist"]["state"] = True

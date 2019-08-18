@@ -2,19 +2,22 @@
 # pylint: disable=missing-docstring,line-too-long,broad-except
 
 
-async def summary(self, repo, repochecks):
+async def summary(self, repository, repochecks):
     # Get the current comments
     current = await self.repository.list_issue_comments(self.issue_number)
     update = False
     comment_id = None
 
-    message = f"## Summary of checks for `{repo}`\n\n"
+    message = f"## Summary of checks for `{repository.full_name}`\n\n"
     for comment in current:
         if message in comment.body:
             update = True
             comment_id = comment.id
 
-    message += f"[Repository link](https://github.com/{repo})\n\n"
+    message += f"[Repository link](https://github.com/{repository.full_name})\n"
+    message += "Checks was run against"
+    message += f"[{repository.attributes['ref'].replace('tags/', '')}]"
+    message += f"(https://github.com/{repository.full_name}/tree/{repository.attributes['ref'].replace('tags/', '')})\n\n"
 
     message += "### Core checks\n\nStatus | Check\n-- | --\n"
 
