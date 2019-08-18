@@ -60,8 +60,7 @@ async def new_repo_common(repository, repochecks, files):
             "url": "https://hacs.netlify.com/developer/general/#hacsjson",
         }
 
-    category = files[0]
-    print(files[0])
+    category = files[0].split("/")[-1]
     if category == "appdaemon":
         print(f"Running tests for appdaemon")
 
