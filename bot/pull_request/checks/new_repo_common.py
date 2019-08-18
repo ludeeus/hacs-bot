@@ -63,6 +63,8 @@ async def new_repo_common(repository, repochecks, files):
     category = files[0].split("/")[-1]
     if category == "appdaemon":
         print(f"Running checks for appdaemon")
+        from pull_request.checks.new_repo_appdaemon import new_repo_appdaemon
+        repochecks = await new_repo_appdaemon(repository, repochecks)
 
     elif category == "integration":
         print(f"Running checks for integration")
@@ -71,11 +73,17 @@ async def new_repo_common(repository, repochecks, files):
 
     elif category == "plugin":
         print(f"Running checks for plugin")
+        from pull_request.checks.new_repo_plugin import new_repo_plugin
+        repochecks = await new_repo_plugin(repository, repochecks)
 
     elif category == "python_script":
         print(f"Running checks for python_script")
+        from pull_request.checks.new_repo_python_script import new_repo_python_script
+        repochecks = await new_repo_python_script(repository, repochecks)
 
     elif category == "theme":
         print(f"Running checks for theme")
+        from pull_request.checks.new_repo_theme import new_repo_theme
+        repochecks = await new_repo_theme(repository, repochecks)
 
     return repochecks

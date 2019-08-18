@@ -33,7 +33,9 @@ async def new_repository(self, files, added, removed):
 
     repo = added[0]
     self.category = files[0].split("/")[-1]
-    repochecks = self.const.CHECKS
+    repochecks = {}
+    for check in self.const.CHECKS:
+        repochecks[check] = self.const.CHECKS[check]
     repository = None
     try:
         repository = await self.aiogithub.get_repo(repo)
