@@ -15,7 +15,7 @@ async def summary(self, repository, repochecks):
             comment_id = comment.id
 
     message += f"[Repository link](https://github.com/{repository.full_name})\n"
-    message += "Checks was run against"
+    message += "Checks was run against "
     message += f"[{repository.attributes['ref'].replace('tags/', '')}]"
     message += f"(https://github.com/{repository.full_name}/tree/{repository.attributes['ref'].replace('tags/', '')})\n\n"
 
