@@ -28,7 +28,7 @@ async def summary(self, repo, repochecks):
             category_checks[check] = repochecks[check]
 
     if category_checks:
-        message += f"### Checks for {self.category}\n\nStatus | Check\n-- | --\n"
+        message += f"### {self.category.title()} checks\n\nStatus | Check\n-- | --\n"
         for check in category_checks:
             status = "✔️" if category_checks[check]["state"] else "❌"
             message += f"{status} | {category_checks[check]['description'].capitalize()}\n"
