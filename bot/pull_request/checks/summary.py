@@ -21,13 +21,13 @@ async def summary(self, repo, repochecks):
     for check in self.const.CORE_CHECKS:
         status = "✔️" if repochecks[check]["state"] else "❌"
         message += f"{status} | {repochecks[check]['description'].capitalize()}\n"
+        del repochecks[check]
 
-    # message += f"### Checks for {self.category}\n\nStatus | Check\n-- | --\n"
-    # for check in repochecks:
-    #     if check in self.const.CORE_CHECKS:
-    #         continue
-    #     status = "✔️" if repochecks[check]["state"] else "❌"
-    #     message += f"{status} | {repochecks[check]['description'].capitalize()}\n"
+    if repochecks:
+        message += f"### Checks for {self.category}\n\nStatus | Check\n-- | --\n"
+        for check in repochecks:
+            status = "✔️" if repochecks[check]["state"] else "❌"
+            message += f"{status} | {repochecks[check]['description'].capitalize()}\n"
 
     self.issue_comment.message = message
     if update:
