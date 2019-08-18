@@ -1,6 +1,7 @@
 """Checks for new repos."""
 import json
 
+
 async def new_repo_common(repository, repochecks, files):
     if files[0] == "blacklist":
         return repochecks
@@ -11,25 +12,25 @@ async def new_repo_common(repository, repochecks, files):
     repochecks["description"] = {
         "state": repository.description != "",
         "description": "Repository have description",
-        "url": "https://manifest--hacs.netlify.com/developer/general/#description",
+        "url": "https://hacs.netlify.com/developer/general/#description",
     }
 
     repochecks["manifest"] = {
         "state": False,
         "description": "Repository have a hacs.json file",
-        "url": "https://manifest--hacs.netlify.com/developer/general/#hacsjson"
+        "url": "https://hacs.netlify.com/developer/general/#hacsjson",
     }
 
     repochecks["readme"] = {
         "state": False,
         "description": "Repository have a readme file",
-        "url": "https://manifest--hacs.netlify.com/developer/general/#readme",
+        "url": "https://hacs.netlify.com/developer/general/#readme",
     }
 
     repochecks["info"] = {
         "state": False,
         "description": "Repository have a info file",
-        "url": "https://manifest--hacs.netlify.com/developer/general/#infomd",
+        "url": "https://hacs.netlify.com/developer/general/#infomd",
     }
 
     manifestcontent = None
@@ -48,9 +49,16 @@ async def new_repo_common(repository, repochecks, files):
             repochecks["info"]["url"] = filename.attributes["html_url"]
 
     # TODO: Enabled after 0.14.0 of HACS
-    #if manifestcontent is not None:
+    # if manifestcontent is not None:
     #    if manifestcontent.get("render_readme"):
     #        del repochecks["info"]
+
+    if manifestcontent is not None:
+        repochecks["hacs.json - name"] = {
+            "state": "name" in manifestcontent,
+            "description": "The hacs.json file have a name key",
+            "url": "https://hacs.netlify.com/developer/general/#hacsjson",
+        }
 
     category = files[0]
     if category == "appdaemon":
