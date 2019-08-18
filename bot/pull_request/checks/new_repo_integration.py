@@ -4,22 +4,10 @@
 
 async def new_repo_integration(repository, repochecks):
 
-    repochecks["integration exist"] = {
-        "state": False,
-        "description": "Integration exist in the custom_component directory",
-        "url": "https://hacs.netlify.com/developer/integration/#repository-structure",
-    }
-
     repochecks = await integration_directory_exsist(repository, repochecks)
     if not repochecks["integration exist"]["state"]:
         return repochecks
 
-
-    repochecks["manifest.json"] = {
-        "state": False,
-        "description": "Integration have a manifest.json file",
-        "url": "https://hacs.netlify.com/developer/integration/#manifestjson",
-    }
 
     repochecks = await integration_manifest_exsist(repository, repochecks)
     if not repochecks["manifest.json"]["state"]:
@@ -29,6 +17,11 @@ async def new_repo_integration(repository, repochecks):
 
 
 async def integration_directory_exsist(repository, repochecks):
+    repochecks["integration exist"] = {
+        "state": False,
+        "description": "Integration exist in the custom_component directory",
+        "url": "https://hacs.netlify.com/developer/integration/#repository-structure",
+    }
     try:
         ccdir = await repository.get_contents("custom_components")
         if not isinstance(ccdir, list):
@@ -40,6 +33,11 @@ async def integration_directory_exsist(repository, repochecks):
     return repochecks
 
 async def integration_manifest_exsist(repository, repochecks):
+    repochecks["manifest.json"] = {
+        "state": False,
+        "description": "Integration have a manifest.json file",
+        "url": "https://hacs.netlify.com/developer/integration/#manifestjson",
+    }
     try:
         ccdir = await repository.get_contents("custom_components")
         manifest_path = f"{ccdir[0].path}/manifest.json"
