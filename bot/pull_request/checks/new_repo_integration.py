@@ -7,7 +7,7 @@ async def new_repo_integration(repository, repochecks):
     repochecks["integration exist"] = {
         "state": False,
         "description": "Integration exist in the custom_component directory",
-        "url": "https://hacs.netlify.com/developer/general/#description",
+        "url": "https://hacs.netlify.com/developer/integration/#repository-structure",
     }
 
     repochecks = await integration_directory_exsist(repository, repochecks)
@@ -18,7 +18,7 @@ async def new_repo_integration(repository, repochecks):
     repochecks["manifest.json"] = {
         "state": False,
         "description": "Integration have a manifest.json file",
-        "url": "https://hacs.netlify.com/developer/general/#description",
+        "url": "https://hacs.netlify.com/developer/integration/#manifestjson",
     }
 
     repochecks = await integration_manifest_exsist(repository, repochecks)
@@ -44,8 +44,8 @@ async def integration_manifest_exsist(repository, repochecks):
         ccdir = await repository.get_contents("custom_components")
         manifest_path = f"{ccdir[0].path}/manifest.json"
         manifest = await repository.get_contents(manifest_path)
-        repochecks["integration exist"]["state"] = True
-        repochecks["integration exist"]["url"] = manifest.attributes["html_url"]
+        repochecks["manifest.json"]["state"] = True
+        repochecks["manifest.json"]["url"] = manifest.attributes["html_url"]
     except Exception:
         return repochecks
     return repochecks
