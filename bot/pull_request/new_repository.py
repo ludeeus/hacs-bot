@@ -23,9 +23,10 @@ async def new_repository(self, files, added, removed):
             added.remove(repo)
 
     if len(files) > 1 or len(added) > 1:
-        self.issue_update.labels.append("Manual review required")
-        self.issue_comment.message = self.const.MULTIPLE_FILES_CHANGED
-        await self.issue_comment.create()
+        if self.const.LABEL_MANUAL_REVIEW not in self.issue_update.labels:
+            self.issue_update.labels.append(self.const.LABEL_MANUAL_REVIEW)
+            self.issue_comment.message = self.const.MULTIPLE_FILES_CHANGED
+            await self.issue_comment.create()
         return
 
     failed = []
@@ -78,3 +79,6 @@ async def new_repository(self, files, added, removed):
                 "Authorization": f"token {self.token}",
             },
         )
+    else:
+        if self.const.LABEL_MANUAL_REVIEW not in self.issue_update.labels:
+            self.issue_update.labels.append(self.const.LABEL_MANUAL_REVIEW)
