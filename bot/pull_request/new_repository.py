@@ -7,7 +7,7 @@ from pull_request.checks.summary import summary
 async def new_repository(self, files, added, removed):
     """Handle PR's to the data branch."""
     files, added, removed = files, added, removed
-    if self.action not in ["opened", "synchronize", "labeled"]:
+    if self.action not in ["opened", "reopened", "synchronize", "labeled"]:
         return
     if self.action == "labeled":
         if self.event_data["label"]["name"] != "recheck":
