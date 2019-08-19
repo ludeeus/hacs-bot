@@ -18,7 +18,7 @@ async def check_import_type(repository, repochecks):
     repochecks["import type"] = {
         "state": False,
         "description": "The repository README have info about how the plugin should be defined.",
-        "url": None,
+        "url": "https://hacs.netlify.com/developer/plugin/#import-type",
     }
     readme = None
     import_type = None
