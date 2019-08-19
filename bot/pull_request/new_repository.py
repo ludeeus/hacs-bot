@@ -69,28 +69,4 @@ async def new_repository(self, files, added, removed):
                 target_url=repochecks[check]["url"],
             )
 
-    await summary(self, repository, repochecks)
-    print("Adding review.")
-    endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"
-    data = {
-        "commit_id": self.event_data["pull_request"]["head"]["sha"],
-        "event": "APPROVE",
-    }
-    if failed:
-        data["event"] = "REQUEST_CHANGES"
-        data["body"] = "One (or more) check(s) failed\nTo get information about what it is, click the 'Details' link\nFor genreal documentation about requirements [look here](https://hacs.netlify.com/developer/general/)."
-
-        if self.const.LABEL_MANUAL_REVIEW not in self.issue_update.labels:
-            self.issue_update.labels.append(self.const.LABEL_MANUAL_REVIEW)
-
-    await self.session.post(
-        endpoint,
-        json=data,
-        headers={
-            "Accept": "application/vnd.github.v3.raw+json",
-            "Authorization": f"token {self.token}",
-        },
-    )
-
-
-    
+    await summary(self, repository, repochecks, failed)

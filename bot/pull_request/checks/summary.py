@@ -2,7 +2,7 @@
 # pylint: disable=missing-docstring,line-too-long,broad-except
 
 
-async def summary(self, repository, repochecks):
+async def summary(self, repository, repochecks, failed):
     # Get the current comments
     current = await self.repository.list_issue_comments(self.issue_number)
     update = False
@@ -36,8 +36,24 @@ async def summary(self, repository, repochecks):
             status = "✔️" if category_checks[check]["state"] else "❌"
             message += f"{status} | {category_checks[check]['description'].capitalize()}\n"
 
-    self.issue_comment.message = message
-    if update:
-        await self.issue_comment.update(comment_id)
-    else:
-        await self.issue_comment.create()
+    print("Adding review.")
+    endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"
+    data = {
+        "commit_id": self.event_data["pull_request"]["head"]["sha"],
+        "event": "APPROVE",
+        "body": message
+    }
+    if failed:
+        data["event"] = "REQUEST_CHANGES"
+
+        if self.const.LABEL_MANUAL_REVIEW not in self.issue_update.labels:
+            self.issue_update.labels.append(self.const.LABEL_MANUAL_REVIEW)
+
+    await self.session.post(
+        endpoint,
+        json=data,
+        headers={
+            "Accept": "application/vnd.github.v3.raw+json",
+            "Authorization": f"token {self.token}",
+        },
+    )
