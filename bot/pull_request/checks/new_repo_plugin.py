@@ -1,5 +1,6 @@
 """Checks for plugins."""
 # pylint: disable=no-name-in-module, broad-except, missing-docstring
+from aiogithubapi import AIOGitHubException
 
 
 async def new_repo_plugin(repository, repochecks):
@@ -87,5 +88,5 @@ async def verify_plugin_location(repository, repochecks):
                 if name in files:
                     repochecks["plugin location"]["state"] = True
                     return repochecks
-        except Exception:
+        except (AIOGitHubException, Exception):
             pass
