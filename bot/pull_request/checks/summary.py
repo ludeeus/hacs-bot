@@ -6,6 +6,7 @@ async def summary(self, repository, repochecks, failed):
     # Get the current comments
     endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"
     current = await self.session.get(endpoint, headers={"Authorization": f"token {self.token}"})
+    current = await current.json()
 
     for review in current:
         endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews/{review['id']}"
