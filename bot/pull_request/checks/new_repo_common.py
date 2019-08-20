@@ -55,7 +55,7 @@ async def new_repo_common(repository, repochecks, files):
     #    if manifestcontent.get("render_readme"):
     #        del repochecks["info"]
 
-    if manifestcontent is not None:
+    if manifestcontent is not None or isinstance(manifestcontent, dict):
         repochecks["hacs.json - name"] = {
             "state": "name" in manifestcontent,
             "description": "The hacs.json file have a name key",

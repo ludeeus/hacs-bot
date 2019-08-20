@@ -4,16 +4,14 @@
 
 async def summary(self, repository, repochecks, failed):
     # Get the current comments
-    current = await self.repository.list_issue_comments(self.issue_number)
-    update = False
-    comment_id = None
+    endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"
+    current = await self.session.get(endpoint, headers={"Authorization": f"token {self.token}"})
+
+    for review in current:
+        endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews/{review['id']}"
+        current = await self.session.delete(endpoint, headers={"Authorization": f"token {self.token}"})
 
     message = f"## Summary of checks for `{repository.full_name}`\n\n"
-    for comment in current:
-        if message in comment.body:
-            update = True
-            comment_id = comment.id
-
     message += f"[Repository link](https://github.com/{repository.full_name})\n"
     message += "Checks was run against "
     message += f"[{repository.attributes['ref'].replace('tags/', '')}]"
