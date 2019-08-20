@@ -50,10 +50,9 @@ async def new_repo_common(repository, repochecks, files):
             repochecks["info"]["state"] = True
             repochecks["info"]["url"] = filename.attributes["html_url"]
 
-    # TODO: Enabled after 0.14.0 of HACS
-    # if manifestcontent is not None:
-    #    if manifestcontent.get("render_readme"):
-    #        del repochecks["info"]
+    if manifestcontent is not None:
+       if manifestcontent.get("render_readme"):
+           del repochecks["info"]
 
     if manifestcontent is not None or isinstance(manifestcontent, dict):
         repochecks["hacs.json - name"] = {

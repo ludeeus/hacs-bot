@@ -10,7 +10,7 @@ async def summary(self, repository, repochecks, failed):
 
     for review in current:
         endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews/{review['id']}"
-        current = await self.session.delete(endpoint, headers={"Authorization": f"token {self.token}"})
+        current = await self.session.put(endpoint, headers={"Authorization": f"token {self.token}"}, json={"body": "_._"})
 
     message = f"## Summary of checks for `{repository.full_name}`\n\n"
     message += f"[Repository link](https://github.com/{repository.full_name})\n"
