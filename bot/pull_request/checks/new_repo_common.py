@@ -38,9 +38,11 @@ async def new_repo_common(repository, repochecks, files):
         if filename.name == "hacs.json":
             repochecks["manifest"]["state"] = True
             repochecks["manifest"]["url"] = filename.attributes["html_url"]
-
-            manifestcontent = await repository.get_contents("hacs.json", repository.attributes['ref'])
-            manifestcontent = json.loads(manifestcontent.content)
+            try:
+                manifestcontent = await repository.get_contents("hacs.json", repository.attributes['ref'])
+                manifestcontent = json.loads(manifestcontent.content)
+            except Exception:
+                pass
         if filename.name.lower() in readme_files:
             repochecks["readme"]["state"] = True
             repochecks["readme"]["url"] = filename.attributes["html_url"]
