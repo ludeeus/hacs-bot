@@ -44,7 +44,13 @@ LABEL_FRONTEND = "Frontend"
 
 
 MULTIPLE_FILES_CHANGED = """
-This PR changed more then 1 file, because of that automagicall checks can not be exceuted.
+This PR changed more then 1 file, because of that automagically checks can not be exceuted.
+
+Someone will manually ensure that that it's OK. 💃+
+"""
+
+MULTIPLE_REPOS_ADDED = """
+This PR added more then 1 repository, because of that automagically checks can not be exceuted.
 
 Someone will manually ensure that that it's OK. 💃+
 """

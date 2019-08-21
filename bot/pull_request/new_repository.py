@@ -22,8 +22,13 @@ async def new_repository(self, files, added, removed):
         if not "/" in repo:
             added.remove(repo)
 
-    if len(files) > 1 or len(added) > 1:
+    if len(files) > 1:
         self.issue_comment.message = self.const.MULTIPLE_FILES_CHANGED
+        await self.issue_comment.create()
+        return
+
+    elif len(added) > 1:
+        self.issue_comment.message = self.const.MULTIPLE_REPOS_ADDED
         await self.issue_comment.create()
         return
 
