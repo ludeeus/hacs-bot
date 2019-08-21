@@ -20,9 +20,11 @@ class Bot:
         self.token = token
         self.event_data = event_data
         self.aiogithub = None
+        self.multiple = False
         self.issue_number = None
         self.submitter = None
         self.action = None
+        self.common_fails = []
         self.issue_type = None
         self.issue_comment = None
         self.issue_update = None

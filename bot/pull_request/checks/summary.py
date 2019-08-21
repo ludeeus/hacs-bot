@@ -50,6 +50,11 @@ async def summary(self, repository, repochecks, failed):
     else:
         await self.issue_comment.create()
 
+    if self.multiple:
+        if failed:
+            self.common_fails.append(repository.full_name)
+        return
+
     if not failed:
         print("Adding review.")
         endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"

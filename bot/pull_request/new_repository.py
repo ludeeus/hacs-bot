@@ -27,6 +27,10 @@ async def new_repository(self, files, added, removed):
         await self.issue_comment.create()
         return
 
+    if len(added) > 1:
+
+        self.multiple = True
+
     failed = []
 
     for repo in added:
@@ -52,3 +56,20 @@ async def new_repository(self, files, added, removed):
                 repository.attributes["ref"] = repository.default_branch
             repochecks = await new_repo_common(repository, repochecks, files)
         await summary(self, repository, repochecks, failed)
+
+    if self.multiple:
+        if not self.common_fails:
+            print("Adding review.")
+            endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"
+            data = {
+                "commit_id": self.event_data["pull_request"]["head"]["sha"],
+                "event": "APPROVE",
+            }
+            await self.session.post(
+                endpoint,
+                json=data,
+                headers={
+                    "Accept": "application/vnd.github.v3.raw+json",
+                    "Authorization": f"token {self.token}",
+                },
+            )
