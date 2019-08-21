@@ -7,13 +7,13 @@ NAME = "hacs-bot"
 CORE_CHECKS = ["fork", "owner", "exist", "readme", "info", "description", "manifest", "hacs.json - name"]
 
 CHECKS = {
-    "fork": {"state": False, "description": "Repository is not a fork.", "url": None},
+    "fork": {"state": False, "description": "Repository is not a fork.", "url": "#"},
     "owner": {
         "state": False,
         "description": "Submitter is the owner of the repository.",
         "url": "https://custom-components.github.io/hacs/developer/include_default_repositories/#include-default-repositories",
     },
-    "exist": {"state": False, "description": "The repository exist.", "url": None},
+    "exist": {"state": False, "description": "The repository exist.", "url": "#"},
 }
 
 GREETING_PR = """Hi, @{} 👋
