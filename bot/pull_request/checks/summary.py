@@ -50,10 +50,7 @@ async def summary(self, repository, repochecks, failed):
     else:
         await self.issue_comment.create()
 
-    if failed:
-        if self.const.LABEL_MANUAL_REVIEW not in self.issue_update.labels:
-            self.issue_update.labels.append(self.const.LABEL_MANUAL_REVIEW)
-    else:
+    if not failed:
         print("Adding review.")
         endpoint = f"https://api.github.com/repos/{self.event_data['repository']['full_name']}/pulls/{self.issue_number}/reviews"
         data = {

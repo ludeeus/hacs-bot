@@ -23,10 +23,8 @@ async def new_repository(self, files, added, removed):
             added.remove(repo)
 
     if len(files) > 1 or len(added) > 1:
-        if self.const.LABEL_MANUAL_REVIEW not in self.issue_update.labels:
-            self.issue_update.labels.append(self.const.LABEL_MANUAL_REVIEW)
-            self.issue_comment.message = self.const.MULTIPLE_FILES_CHANGED
-            await self.issue_comment.create()
+        self.issue_comment.message = self.const.MULTIPLE_FILES_CHANGED
+        await self.issue_comment.create()
         return
 
     failed = []

@@ -41,7 +41,6 @@ LABEL_NEW_REPO = "New default repository"
 LABEL_DOCUMENTATION = "Documentation"
 LABEL_BACKEND = "Backend"
 LABEL_FRONTEND = "Frontend"
-LABEL_MANUAL_REVIEW = "Manual review required"
 
 
 MULTIPLE_FILES_CHANGED = """
