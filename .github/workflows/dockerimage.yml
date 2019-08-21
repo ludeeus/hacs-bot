@@ -10,6 +10,6 @@ jobs:
     - name: Login to docker.pkg.github.com
       run: docker login docker.pkg.github.com -u ludeeus -p ${{ secrets.GITHUB_PAT }}
     - name: Build the Docker image
-      run: docker build -t docker.pkg.github.com/ludeeus/hacs-bot/hacs-bot:latest .
+      run: docker build -t docker.pkg.github.com/ludeeus/hacs-bot/hacs-bot:$(date +%s) .
     - name: Push the Docker image
-      run: docker push docker.pkg.github.com/ludeeus/hacs-bot/hacs-bot:latest
+      run: docker push docker.pkg.github.com/ludeeus/hacs-bot/hacs-bot:$(date +%s)
