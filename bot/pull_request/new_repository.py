@@ -27,33 +27,28 @@ async def new_repository(self, files, added, removed):
         await self.issue_comment.create()
         return
 
-    elif len(added) > 1:
-        self.issue_comment.message = self.const.MULTIPLE_REPOS_ADDED
-        await self.issue_comment.create()
-        return
-
     failed = []
 
-    repo = added[0]
-    self.category = files[0].split("/")[-1]
-    repochecks = {}
-    for check in self.const.CHECKS:
-        repochecks[check] = self.const.CHECKS[check]
-    repository = None
-    try:
-        repository = await self.aiogithub.get_repo(repo)
-        repochecks["exist"]["state"] = True
-        repochecks["exist"]["url"] = f"https://github.com/{repo}"
-        repochecks["fork"]["state"] = not repository.fork
-        repochecks["owner"]["state"] = repo.split("/")[0] == self.submitter
-    except Exception:
-        pass
+    for repo in added:
+        self.category = files[0].split("/")[-1]
+        repochecks = {}
+        for check in self.const.CHECKS:
+            repochecks[check] = self.const.CHECKS[check]
+        repository = None
+        try:
+            repository = await self.aiogithub.get_repo(repo)
+            repochecks["exist"]["state"] = True
+            repochecks["exist"]["url"] = f"https://github.com/{repo}"
+            repochecks["fork"]["state"] = not repository.fork
+            repochecks["owner"]["state"] = repo.split("/")[0] == self.submitter
+        except Exception:
+            pass
 
-    if repository is not None:
-        releases = await repository.get_releases()
-        if releases:
-            repository.attributes["ref"] = f"tags/{releases[0].tag_name}"
-        else:
-            repository.attributes["ref"] = repository.default_branch
-        repochecks = await new_repo_common(repository, repochecks, files)
-    await summary(self, repository, repochecks, failed)
+        if repository is not None:
+            releases = await repository.get_releases()
+            if releases:
+                repository.attributes["ref"] = f"tags/{releases[0].tag_name}"
+            else:
+                repository.attributes["ref"] = repository.default_branch
+            repochecks = await new_repo_common(repository, repochecks, files)
+        await summary(self, repository, repochecks, failed)
