@@ -53,20 +53,4 @@ async def new_repository(self, files, added, removed):
         else:
             repository.attributes["ref"] = repository.default_branch
         repochecks = await new_repo_common(repository, repochecks, files)
-
-    for check in repochecks:
-        if repochecks[check]["state"]:
-            await self.status.create(
-                "success",
-                repochecks[check]["description"],
-                target_url=repochecks[check]["url"],
-            )
-        else:
-            failed.append([repository, check])
-            await self.status.create(
-                "error",
-                repochecks[check]["description"],
-                target_url=repochecks[check]["url"],
-            )
-
     await summary(self, repository, repochecks, failed)

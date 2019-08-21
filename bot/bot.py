@@ -1,7 +1,6 @@
 """Handle Bot automations."""
 # pylint: disable=missing-docstring,line-too-long,broad-except,no-name-in-module
 from aiogithubapi import AIOGitHub
-
 import const as const
 from github_actions import IssueComment, IssueUpdate, Status
 from issue.issue import handle_issue
