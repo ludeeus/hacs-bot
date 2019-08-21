@@ -25,7 +25,11 @@ async def summary(self, repository, repochecks, failed):
 
     for check in repochecks:
         if check in self.const.CORE_CHECKS:
-            status = "✔️" if repochecks[check]["state"] else "❌"
+            if repochecks[check]["state"]:
+                status = "✔️"
+            else:
+                status = "❌"
+                failed.append(check)
             message += f"{status} | [{repochecks[check]['description'].capitalize()}]({repochecks[check]['url']})\n"
         else:
             category_checks[check] = repochecks[check]
@@ -33,7 +37,11 @@ async def summary(self, repository, repochecks, failed):
     if category_checks:
         message += f"### {self.category.title()} checks\n\nStatus | Check\n-- | --\n"
         for check in category_checks:
-            status = "✔️" if category_checks[check]["state"] else "❌"
+            if category_checks[check]["state"]:
+                status = "✔️"
+            else:
+                status = "❌"
+                failed.append(check)
             message += f"{status} | [{repochecks[check]['description'].capitalize()}]({repochecks[check]['url']})\n"
 
     self.issue_comment.message = message
