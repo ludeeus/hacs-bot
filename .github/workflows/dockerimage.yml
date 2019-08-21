@@ -12,4 +12,4 @@ jobs:
     - name: Build the Docker image
       run: docker build -t docker.pkg.github.com/ludeeus/hacs-bot/hacs-bot:$(date +%s) .
     - name: Push the Docker image
-      run: docker push docker.pkg.github.com/ludeeus/hacs-bot/hacs-bot:$(date +%s)
+      run: docker push docker.pkg.github.com/ludeeus/hacs-bot/hacs-bot
