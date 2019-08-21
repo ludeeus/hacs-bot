@@ -8,7 +8,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Login to docker.pkg.github.com
-      run: docker login docker.pkg.github.com -u ${{ secrets.GITHUB_USER }} -p ${{ secrets.GITHUB_PAT }}
+      run: docker login docker.pkg.github.com -u ludeeus -p ${{ secrets.GITHUB_PAT }}
     - name: Build the Docker image
       run: docker build -t docker.pkg.github.com/ludeeus/hacs-bot/hacs-bot .
     - name: Push the Docker image
