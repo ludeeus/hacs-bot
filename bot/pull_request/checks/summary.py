@@ -18,6 +18,7 @@ async def summary(self, repository, repochecks, failed):
     message += "Checks was run against "
     message += f"[{repository.attributes['ref'].replace('tags/', '')}]"
     message += f"(https://github.com/{repository.full_name}/tree/{repository.attributes['ref'].replace('tags/', '')})\n\n"
+    message += "All checks needs to be ✔️ before this can be included, to learn more about a failed check, click the link for it 👇\n\n"
 
     message += "### Core checks\n\nStatus | Check\n-- | --\n"
 
