@@ -1,6 +1,6 @@
 version: '3'
 services:
-    updatehacs-bot:
+    update-hacs-bot:
         image: alpine/git
         volumes:
           - './hacs-bot:/git'
@@ -15,4 +15,3 @@ services:
             - '/cert:/cert'
         ports:
             - '8080:8080'
-        image: hacs-bot
