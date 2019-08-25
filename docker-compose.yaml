@@ -1,0 +1,18 @@
+version: '3'
+services:
+    updatehacs-bot:
+        image: alpine/git
+        volumes:
+          - './hacs-bot:/git'
+        command: "pull"
+    hacs-bot:
+        depends_on:
+            - "update-hacs-bot"
+        container_name: hacs-bot
+        build: hacs-bot/
+        restart: always
+        volumes:
+            - '/cert:/cert'
+        ports:
+            - '8080:8080'
+        image: hacs-bot
