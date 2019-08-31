@@ -89,4 +89,4 @@ async def verify_plugin_location(repository, repochecks):
                     repochecks["plugin location"]["state"] = True
                     return repochecks
         except (AIOGitHubException, Exception):
-            pass
+            return repochecks
