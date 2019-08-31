@@ -6,12 +6,7 @@ from aiogithubapi import AIOGitHubException
 async def new_repo_plugin(repository, repochecks):
 
     repochecks = await check_import_type(repository, repochecks)
-    if not repochecks["import type"]["state"]:
-        return repochecks
-
     repochecks = await verify_plugin_location(repository, repochecks)
-    if not repochecks["plugin location"]["state"]:
-        return repochecks
 
     return repochecks
 
@@ -89,4 +84,5 @@ async def verify_plugin_location(repository, repochecks):
                     repochecks["plugin location"]["state"] = True
                     return repochecks
         except (AIOGitHubException, Exception):
-            return repochecks
+            return pass
+    return repochecks
