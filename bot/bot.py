@@ -6,7 +6,6 @@ from github_actions import IssueComment, IssueUpdate, Status
 from issue.issue import handle_issue
 from pull_request.pull_request import handle_pull_request
 
-
 class Bot:
     """Bot Auotmations."""
 

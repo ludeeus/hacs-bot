@@ -1,11 +1,37 @@
 """HACS Bot"""
 # pylint: disable=missing-docstring,line-too-long,broad-except
+import json
+import os
 import time
+
 import jwt
 from aiohttp import ClientSession, web
 
+import asyncpg
 from bot import Bot
 from const import APP_ID, REPOSITORY
+
+
+class DataBaseSettings:
+    @property
+    def user(self):
+        return os.environ["DB_USER"]
+
+    @property
+    def password(self):
+        return os.environ["DB_PASSWORD"]
+
+    @property
+    def host(self):
+        return os.environ["DB_HOST"]
+
+    @property
+    def port(self):
+        return os.environ["DB_PORT"]
+
+    @property
+    def name(self):
+        return os.environ["DB_NAME"]
 
 
 async def repo_not_accepted(event_data, token, session):
@@ -50,12 +76,27 @@ def get_jwtoken():
     return encoded.decode("utf-8")
 
 
+async def store_in_db(event_data):
+    db = DataBaseSettings()
+    db_connection = await asyncpg.connect(
+        user=db.user, password=db.password, database=db.name, host=db.host, port=db.port
+    )
+    await db_connection.set_type_codec(
+        "json", encoder=json.dumps, decoder=json.loads, schema="pg_catalog"
+    )
+    await db_connection.execute(
+        "INSERT INTO request(req_content) VALUES($1::json);", event_data
+    )
+    await db_connection.close()
+
+
 async def bot_handler(request):
     """Handle POST request."""
     event_data = await request.json()
     if event_data.get("sender") is not None:
         if event_data["sender"]["type"] == "Bot":
             return web.Response(status=200)
+    await store_in_db(event_data)
     jwtoken = get_jwtoken()
     async with ClientSession() as session:
         headers = {

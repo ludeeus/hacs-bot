@@ -2,3 +2,4 @@ aiogithubapi
 aiohttp
 PyJWT
 cryptography
+asyncpg
