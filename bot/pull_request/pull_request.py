@@ -15,10 +15,10 @@ async def handle_pull_request(self):
     )
 
     for changed_file in files:
-        if "/docs/" in changed_file:
+        if changed_file.startswith("/documentation/"):
             if self.const.LABEL_DOCUMENTATION not in self.issue_update.labels:
                 self.issue_update.labels.append(self.const.LABEL_DOCUMENTATION)
-        if changed_file.startswith("/custom_components/hacs/frontend/"):
+        if changed_file.startswith("/custom_components/hacs/frontend/") or changed_file.startswith("/frontend/"):
             if self.const.LABEL_FRONTEND not in self.issue_update.labels:
                 self.issue_update.labels.append(self.const.LABEL_FRONTEND)
         if changed_file.endswith(".py"):

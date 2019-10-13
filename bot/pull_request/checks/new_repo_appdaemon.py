@@ -15,7 +15,7 @@ async def app_directory_exsist(repository, repochecks):
     repochecks["app exist"] = {
         "state": False,
         "description": "App exist in the apps directory",
-        "url": "https://hacs.netlify.com/developer/appdaemon/#repository-structure",
+        "url": "https://hacs.netlify.com/docs/publish/appdaemon#repository-structure",
     }
     try:
         appdir = await repository.get_contents("apps", repository.attributes['ref'])

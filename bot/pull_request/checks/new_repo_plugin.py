@@ -14,7 +14,7 @@ async def check_import_type(repository, repochecks):
     repochecks["import type"] = {
         "state": False,
         "description": "The repository README have info about how the plugin should be defined.",
-        "url": "https://hacs.netlify.com/developer/plugin/#import-type",
+        "url": "https://hacs.netlify.com/docs/publish/plugin#import-type",
     }
     readme = None
     import_type = None
@@ -49,7 +49,7 @@ async def verify_plugin_location(repository, repochecks):
     repochecks["plugin location"] = {
         "state": False,
         "description": "The location of the plugin is in one of the expected locations",
-        "url": "https://hacs.netlify.com/developer/plugin/#repository-structure",
+        "url": "https://hacs.netlify.com/docs/publish/plugin#repository-structure",
     }
 
     possible_locations = ["dist", "release", ""]

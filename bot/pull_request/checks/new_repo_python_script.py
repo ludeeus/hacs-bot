@@ -15,7 +15,7 @@ async def python_script_exsist(repository, repochecks):
     repochecks["python_script exist"] = {
         "state": False,
         "description": "python_script exist in the python_script directory",
-        "url": "https://hacs.netlify.com/developer/python_script/#repository-structure",
+        "url": "https://hacs.netlify.com/docs/publish/python_script#repository-structure",
     }
     try:
         psdir = await repository.get_contents("python_script", repository.attributes['ref'])

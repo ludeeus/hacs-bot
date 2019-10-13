@@ -12,25 +12,25 @@ async def new_repo_common(repository, repochecks, files):
     repochecks["description"] = {
         "state": repository.description != "",
         "description": "Repository have description",
-        "url": "https://hacs.netlify.com/developer/general/#description",
+        "url": "https://hacs.netlify.com/docs/publish/start#description",
     }
 
     repochecks["manifest"] = {
         "state": False,
         "description": "Repository have a hacs.json file",
-        "url": "https://hacs.netlify.com/developer/general/#hacsjson",
+        "url": "https://hacs.netlify.com/docs/publish/start#hacsjson",
     }
 
     repochecks["readme"] = {
         "state": False,
         "description": "Repository have a readme file",
-        "url": "https://hacs.netlify.com/developer/general/#readme",
+        "url": "https://hacs.netlify.com/docs/publish/start#readme",
     }
 
     repochecks["info"] = {
         "state": False,
         "description": "Repository have a info file",
-        "url": "https://hacs.netlify.com/developer/general/#infomd",
+        "url": "https://hacs.netlify.com/docs/publish/start#infomd",
     }
 
     manifestcontent = None
@@ -58,7 +58,7 @@ async def new_repo_common(repository, repochecks, files):
         repochecks["hacs.json - name"] = {
             "state": "name" in manifestcontent,
             "description": "The hacs.json file have a name key",
-            "url": "https://hacs.netlify.com/developer/general/#hacsjson",
+            "url": "https://hacs.netlify.com/docs/publish/start#hacsjson",
         }
 
     category = files[0].split("/")[-1]

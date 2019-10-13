@@ -15,7 +15,7 @@ async def theme_exsist(repository, repochecks):
     repochecks["theme exist"] = {
         "state": False,
         "description": "theme exist in the themes directory",
-        "url": "https://hacs.netlify.com/developer/theme/#repository-structure",
+        "url": "https://hacs.netlify.com/docs/publish/theme#repository-structure",
     }
     try:
         themedir = await repository.get_contents("themes", repository.attributes['ref'])
